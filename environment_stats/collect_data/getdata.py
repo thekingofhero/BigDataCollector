@@ -61,8 +61,10 @@ def getdata(url_list):
     temp = ''
     #url = urlopen('http://datacenter.mep.gov.cn/report/air_daily/air_dairy.jsp?city=&startdate=2012-12-05&enddate=2015-12-22&page=1')
     #    url = urlopen('http://datacenter.mep.gov.cn/report/air_daily/airDairyCityHour.jsp?city=&startdate=2014-01-01%2008:00&enddate=2014-01-01%2011:00&page=2')
+    headers = {'User-Agent':'Mozilla/5.0 (X11; U; Linux i686)Gecko/20071127 Firefox/2.0.0.11'}  
     for url_per in url_list:
-        url = urlopen(url_per)
+        req = Request(url_per,headers=headers) 
+        url = urlopen(req)
         temp = url.read()
         temp = temp.replace("\n",'')
         soup = BeautifulSoup(temp,"lxml")
@@ -72,7 +74,20 @@ def getdata(url_list):
         with open(r'./data_csv/%s.csv'%(url_per.split(".jsp?")[1][0:-7]),'w') as fpw:
             pages = get_pages(soup,url_per)
             for i,page in enumerate(pages):
-                soup = BeautifulSoup(urlopen(page).read().replace("\n",""))
+                print("get from %s"%(page))
+                headers = {'User-Agent':'Mozilla/5.0 (X11; U; Linux i686)Gecko/20071127 Firefox/2.0.0.11'}  
+                try:
+                    req = Request(page,headers=headers) 
+                    soup = BeautifulSoup(urlopen(req).read().replace("\n",""))
+                except:
+                    try:
+                        time.sleep(5)
+                        headers = {'User-Agent':'Mozilla/5.0 (X11; U; Linux i686)Gecko/20100101 Firefox/16.0'}
+                        req = Request(page,headers=headers)
+                        soup = BeautifulSoup(urlopen(req).read().replace("\n",""))
+                    except:
+                        print("lost %s"%(page))
+                        continue
                 get_envdata(soup,fpw,True if i == 0 else False)
                 time.sleep(5)
 

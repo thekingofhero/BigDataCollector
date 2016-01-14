@@ -16,7 +16,7 @@ class collect_data:
         days = (end_t - start_t).days
         #total tasks,hours left
         for i in range(1,days+2):
-            s = str(start_t).split(" ")
+            s = str(start_t + datetime.timedelta(i-1)).split(" ")
             e = str(start_t + datetime.timedelta(i)).split(" ")
             if (start_t + datetime.timedelta(i)) > end_t:
                 e = str(end_t).split(" ")
@@ -28,7 +28,6 @@ class collect_data:
                     start_time = "00:00",\
                     end_date = '2014-01-01',\
                     end_time = '01:00'):
-        thread_num = 10
         total_tasks = self.get_task_days(start_date,start_time,end_date,end_time)
         url_list = []
         for s,e in total_tasks:
@@ -48,4 +47,8 @@ class collect_data:
 
 if __name__ == '__main__':
     obj = collect_data()
-    obj.collect()
+    obj.collect(thread_num = 10,\
+                start_date = '2014-01-01',\
+                start_time = '00:00',\
+                end_date = "2016-01-01",\
+                end_time = "00:00")
