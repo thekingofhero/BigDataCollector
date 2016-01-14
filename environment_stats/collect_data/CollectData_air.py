@@ -2,7 +2,7 @@ import threading
 import datetime
 from getdata import getdata
 import math
-class collect_data:
+class CollectData_Air:
     def __init__(self):
         self.baseurl = "http://datacenter.mep.gov.cn/report/air_daily/airDairyCityHour.jsp?city=&startdate=%s%%20%s&enddate=%s%%20%s&page=1"
         pass
@@ -46,7 +46,7 @@ class collect_data:
                 t.join()
 
 if __name__ == '__main__':
-    obj = collect_data()
+    obj = CollectData_air()
     obj.collect(thread_num = 10,\
                 start_date = '2014-01-01',\
                 start_time = '00:00',\
